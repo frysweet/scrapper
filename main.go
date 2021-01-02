@@ -11,10 +11,12 @@ import (
 var baseURL string = "https://airbnb.com"
 
 func main() {
-	pages := getPage()
+	totalPages := getPages()
+	fmt.Println(totalPages)
 }
 
 func getPages() int {
+	pages := 0
 	res, err := http.Get(baseURL)
 	checkErr(err)
 	checkCode(res)
@@ -22,16 +24,15 @@ func getPages() int {
 	defer res.Body.Close()
 
 	//goquery document 만들기
-	doc, err := goquery.NewDocumentFrontReader(res.Body)
+	doc, err := goquery.NewDocumentFromReader(res.Body)
 	checkErr(err)
 
-	doc.Find(".pagination").Each(func(i int, s *goquery.Selection)){
-		fmt.Println(s.Fine("a"))
-	}
+	doc.Find(".pagination").Each(func(i int, s *goquery.Selection) {
+		pages = s.Find("a").Length()
 
-	fmt.Println(doc)
+	})
 
-	return 0
+	return pages
 }
 
 func checkErr(err error) {
