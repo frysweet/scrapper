@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 var baseURL string = "https://airbnb.com"
@@ -23,7 +25,9 @@ func getPages() int {
 	doc, err := goquery.NewDocumentFrontReader(res.Body)
 	checkErr(err)
 
-	doc.Find(".pagination").Each()
+	doc.Find(".pagination").Each(func(i int, s *goquery.Selection)){
+		fmt.Println(s.Fine("a"))
+	}
 
 	fmt.Println(doc)
 
